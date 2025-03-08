@@ -1,15 +1,15 @@
 
 import './App.css'
 import { Button } from './components/ui/button'
+import Login from './pages/Login'
 
 function App() {
 
 
   return (
-    <>
-      <Button>lets bulid lms</Button>
-      <p class="bg-green-400">hello world</p>
-    </>
+    <main>
+      <Login/>
+    </main>
   )
 }
 
