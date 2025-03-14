@@ -1,7 +1,7 @@
 import { Menu, School } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import DarkMode from '@/DarkMode'
@@ -40,11 +40,13 @@ const Navbar = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem> <Link to={"my-learning"}>
                       My learning
+                    </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      Edit Profile
+                    <DropdownMenuItem><Link to={"profile"}>
+                    Edit Profile
+                    </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       Log Out
