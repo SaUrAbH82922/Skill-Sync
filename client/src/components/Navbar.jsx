@@ -1,7 +1,7 @@
 import { Menu, School } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from './ui/button'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import DarkMode from '@/DarkMode'
@@ -17,9 +17,27 @@ import {
 } from "@/components/ui/sheet"
 import { Input } from './ui/input'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { useLogoutUserMutation } from '@/features/api/authApi'
+import { toast } from 'sonner'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
-  const user=true
+  const {user}=useSelector(store=>store.auth)
+
+  const navigate=useNavigate();
+  const [logoutUser,{data, isSuccess}]=useLogoutUserMutation();
+ 
+  const logoutHandler=async()=>{
+    await logoutUser();
+  }
+
+  useEffect(()=>{
+    if(isSuccess){
+      toast.success(data.message || "User log out.");
+      navigate("/login")
+    }
+  },[isSuccess])
+
   return (
     <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
@@ -32,7 +50,7 @@ const Navbar = () => {
               user?(<DropdownMenu>
                 <DropdownMenuTrigger asChild>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                  <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 </DropdownMenuTrigger>
@@ -48,19 +66,23 @@ const Navbar = () => {
                     Edit Profile
                     </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={logoutHandler}>
                       Log Out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
+                  {user.role==="instructor" && (
+                    <>
+                    <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     Dashboard
                   </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>):(
                 <div className="flex items-center gap-2">
-                    <Button variant="outline">Login</Button>
-                    <Button>Signup</Button>
+                    <Button variant="outline" onClick={()=>navigate("/login")}>Login</Button>
+                    <Button onClick={()=>navigate("/login")}>Signup</Button>
                 </div>
               )
             }
