@@ -30,7 +30,7 @@ const Navbar = () => {
   const logoutHandler=async()=>{
     await logoutUser();
   }
-
+  
   useEffect(()=>{
     if(isSuccess){
       toast.success(data.message || "User log out.");
@@ -73,10 +73,8 @@ const Navbar = () => {
                   {user.role==="instructor" && (
                     <>
                     <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    Dashboard
-                  </DropdownMenuItem>
-                    </>
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>):(
