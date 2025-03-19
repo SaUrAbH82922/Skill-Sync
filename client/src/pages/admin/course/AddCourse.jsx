@@ -2,21 +2,32 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useCreateCourseMutation } from '@/features/api/courseApi'
 import { Loader2 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const AddCourse = () => {
     const [courseTitle, setCourseTitle] = useState("");
     const [category, setCategory] = useState("");
+
+    const [createCourse,{data,error,isLoading,isSuccess}]=useCreateCourseMutation();
+
     const navigate=useNavigate();
-    const isLoading=false
-    const createCourseHandler=()=>{
-        console.log(courseTitle,category);    
+    const createCourseHandler=async()=>{
+        await createCourse({courseTitle,category})
     }
     const getSelectedCategory=(value)=>{
         setCategory(value);
     }
+
+    useEffect(()=>{
+        if(isSuccess){
+            toast.success(data?.message || "Course created.");
+            navigate("/admin/course");
+        }
+    },[isSuccess,error])
   return (
     <div className="flex-1 mx-10">
       <div className="mb-4">
