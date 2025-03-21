@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useGetCreatorCourseQuery } from '@/features/api/courseApi'
 import { Edit } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const CourseTable = () => {
@@ -53,7 +53,10 @@ const CourseTable = () => {
         },
       ]
 
-    const {data,isLoading} =useGetCreatorCourseQuery();
+    const {data,isLoading,refetch} =useGetCreatorCourseQuery();
+    useEffect(()=>{
+      refetch()
+    },[data])
     if(isLoading) return <h1>Loading....</h1>
     // console.log("Data ->",data);
     

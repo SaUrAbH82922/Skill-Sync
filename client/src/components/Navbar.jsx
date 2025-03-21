@@ -49,11 +49,12 @@ const Navbar = () => {
             {
               user?(<DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                <Avatar>
+                <Avatar className="cursor-pointer">
                   <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 </DropdownMenuTrigger>
+                <DropdownMenuPortal>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -77,6 +78,7 @@ const Navbar = () => {
                   </>
                   )}
                 </DropdownMenuContent>
+                </DropdownMenuPortal>
               </DropdownMenu>):(
                 <div className="flex items-center gap-2">
                     <Button variant="outline" onClick={()=>navigate("/login")}>Login</Button>
@@ -84,7 +86,7 @@ const Navbar = () => {
                 </div>
               )
             }
-            <DarkMode/>
+            <DarkMode/> 
         </div>
       </div>
 
