@@ -16,6 +16,7 @@ import AddCourse from './pages/admin/course/AddCourse'
 import EditCourse from './pages/admin/course/EditCourse'
 import CreateLecture from './pages/admin/lecture/CreateLacture'
 import EditLecture from './pages/admin/lecture/EditLecture'
+import CourseDetail from './pages/student/CourseDetail'
 
 function App() {
 
@@ -46,6 +47,10 @@ function App() {
           element:<Profile/>
         },
         {
+          path:"course-detail/:courseId",
+          element:<CourseDetail/>
+        },
+        {
           path:"admin",
           element:<Sidebar/>,
           children:[
@@ -73,6 +78,7 @@ function App() {
               path:"course/:courseId/lecture/:lectureId",
               element:<EditLecture/>
             },
+
           ]
         },
       ]
