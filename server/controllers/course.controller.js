@@ -249,7 +249,6 @@ export const getLectureById = async (req,res) => {
         })
     }
 }
-
 export const togglePublishCourse = async (req,res) => {
     try {
         const {courseId} = req.params;
