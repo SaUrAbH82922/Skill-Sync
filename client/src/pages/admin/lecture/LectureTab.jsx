@@ -30,7 +30,7 @@ const LectureTab = () => {
   const params = useParams();
   const { courseId, lectureId } = params;
 
-  const {data:lectureData} = useGetLectureByIdQuery(lectureId);
+  const {data:lectureData,refetch} = useGetLectureByIdQuery(lectureId);
   const lecture = lectureData?.lecture;
 
   useEffect(()=>{
