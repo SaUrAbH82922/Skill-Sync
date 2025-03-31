@@ -20,7 +20,6 @@ import { toast } from "sonner";
 const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
-
   const [lectureTitle, setLectureTitle] = useState("");
   const [uploadVideInfo, setUploadVideoInfo] = useState(null);
   const [isFree, setIsFree] = useState(false);
@@ -30,7 +29,7 @@ const LectureTab = () => {
   const params = useParams();
   const { courseId, lectureId } = params;
 
-  const {data:lectureData,refetch} = useGetLectureByIdQuery(lectureId);
+  const {data:lectureData} = useGetLectureByIdQuery(lectureId);
   const lecture = lectureData?.lecture;
 
   useEffect(()=>{
@@ -87,7 +86,6 @@ const LectureTab = () => {
       lectureId,
     });
   };
-
   const removeLectureHandler = async () => {
     await removeLecture(lectureId);
   }
