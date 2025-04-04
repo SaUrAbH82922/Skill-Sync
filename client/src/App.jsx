@@ -18,6 +18,7 @@ import CreateLecture from './pages/admin/lecture/CreateLacture'
 import EditLecture from './pages/admin/lecture/EditLecture'
 import CourseDetail from './pages/student/CourseDetail'
 import CourseProgress from './pages/student/CourseProgress'
+import SearchPage from './pages/student/SearchPage'
 
 function App() {
 
@@ -46,6 +47,10 @@ function App() {
         {
           path:"profile",
           element:<Profile/>
+        },
+        {
+          path:"course/search",
+          element:<SearchPage/>
         },
         {
           path:"course-detail/:courseId",
