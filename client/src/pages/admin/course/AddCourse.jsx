@@ -29,7 +29,7 @@ const AddCourse = () => {
         }
     },[isSuccess,error])
   return (
-    <div className="flex-1 mx-10">
+    <div className="flex-1 mx-10 dark:text-black">
       <div className="mb-4">
         <h1 className="font-bold text-xl">
           Lets add course, add some basic course details for your new course
@@ -79,7 +79,7 @@ const AddCourse = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={()=>navigate("/admin/course")}>Back</Button>
+            <Button variant="outline" className="dark:text-amber-50" onClick={()=>navigate("/admin/course")}>Back</Button>
             <Button disabled={isLoading} onClick={createCourseHandler}>
                 {
                     isLoading?<><Loader2 className='mr-2 h-4 w-4 animate-spin'/>Please Wait</>:"Create"

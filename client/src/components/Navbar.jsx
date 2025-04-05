@@ -1,7 +1,7 @@
 import { Menu, School } from 'lucide-react'
 import React, { useEffect, useState, useRef } from 'react'
 import { Button } from './ui/button'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import DarkMode from '@/DarkMode'
 import {
@@ -92,7 +92,7 @@ const Navbar = () => {
                       </button>
                     </li>
                     <Separator className="my-4" />
-                    {user.role === "instructor" && (
+                    {user?.role === "instructor" && (
                       <li>
                         <Link to="/admin/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
                           Dashboard
@@ -125,6 +125,7 @@ export default Navbar
 
 const MobileNavbar = () => {
   const role = "instructor"
+  const navigate=useNavigate();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -145,7 +146,7 @@ const MobileNavbar = () => {
         {role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit">Dashboard</Button>
+              <Button type="submit" onClick={()=>navigate("/admin/dashboard")}>Dashboard</Button>
             </SheetClose>
           </SheetFooter>
         )}

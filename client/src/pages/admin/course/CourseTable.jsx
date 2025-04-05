@@ -62,16 +62,16 @@ const CourseTable = () => {
     
   return (
 
-    <div>
+    <div className="dark:text-black">
         <Button onClick={()=>navigate("create")}>Create a new course</Button>
-        <Table>
+        <Table className="dark:text-black">
         <TableCaption>A list of your recent courses.</TableCaption>
         <TableHeader>
-            <TableRow>
-            <TableHead className="w-[100px]">Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead className="text-right">Action</TableHead> 
+            <TableRow >
+            <TableHead className="w-[100px] dark:text-black">Price</TableHead>
+            <TableHead className="dark:text-black">Status</TableHead>
+            <TableHead className="dark:text-black">Title</TableHead>
+            <TableHead className="text-right dark:text-black">Action</TableHead> 
             </TableRow>
         </TableHeader>
         <TableBody>

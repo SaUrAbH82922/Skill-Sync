@@ -112,7 +112,7 @@ const CourseTab = () => {
   return (
     <Card>
         <CardHeader className="flex flex-row justify-between">
-            <div>
+            <div className='dark:text-black'>
                 <CardTitle>Basic Course Information</CardTitle>
                 <CardDescription>
                     Make changes to your courses here. Click save when you're done.

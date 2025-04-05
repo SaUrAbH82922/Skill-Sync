@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useTheme } from "./components/ThemeProvider";
 
 const DarkMode = () => {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,8 @@ const DarkMode = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const {setTheme}=useTheme()
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
@@ -35,19 +38,19 @@ const DarkMode = () => {
         <div className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <button
-              onClick={() => handleSelect("light")}
+              onClick={() => setTheme("light")}
               className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Light
             </button>
             <button
-              onClick={() => handleSelect("dark")}
+              onClick={() => setTheme("dark")}
               className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Dark
             </button>
             <button
-              onClick={() => handleSelect("system")}
+              onClick={() => setTheme("system")}
               className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               System
