@@ -1,7 +1,7 @@
+ 
 import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import {deleteMediaFromCloudinary, deleteVideoFromCloudinary, uploadMedia} from "../utils/cloudinary.js";
-
 
 export const createCourse = async (req,res) => {
     try {
@@ -30,6 +30,47 @@ export const createCourse = async (req,res) => {
     }
 }
 
+export const searchCourse = async (req,res) => {
+    try {
+        const {query = "", categories = [], sortByPrice =""} = req.query;
+        console.log(categories);
+        
+        // create search query
+        const searchCriteria = {
+            isPublished:true,
+            $or:[
+                {courseTitle: {$regex:query, $options:"i"}},
+                {subTitle: {$regex:query, $options:"i"}},
+                {category: {$regex:query, $options:"i"}},
+            ]
+        }
+
+        // if categories selected
+        if(categories.length > 0) {
+            searchCriteria.category = {$in: categories};
+        }
+
+        // define sorting order
+        const sortOptions = {};
+        if(sortByPrice === "low"){
+            sortOptions.coursePrice = 1;//sort by price in ascending
+        }else if(sortByPrice === "high"){
+            sortOptions.coursePrice = -1; // descending
+        }
+
+        let courses = await Course.find(searchCriteria).populate({path:"creator", select:"name photoUrl"}).sort(sortOptions);
+
+        return res.status(200).json({
+            success:true,
+            courses: courses || []
+        });
+
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
 export const getPublishedCourse = async (_,res) => {
     try {
         const courses = await Course.find({isPublished:true}).populate({path:"creator", select:"name photoUrl"});
@@ -48,7 +89,6 @@ export const getPublishedCourse = async (_,res) => {
         })
     }
 }
-
 export const getCreatorCourses = async (req,res) => {
     try {
         const userId = req.id;
@@ -69,8 +109,6 @@ export const getCreatorCourses = async (req,res) => {
         })
     }
 }
-
-
 export const editCourse = async (req,res) => {
     try {
         const courseId = req.params.courseId;
@@ -87,8 +125,9 @@ export const editCourse = async (req,res) => {
         if(thumbnail){
             if(course.courseThumbnail){
                 const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
-                await deleteMediaFromCloudinary(publicId);
+                await deleteMediaFromCloudinary(publicId); // delete old image
             }
+            // upload a thumbnail on clourdinary
             courseThumbnail = await uploadMedia(thumbnail.path);
         }
 
@@ -109,7 +148,6 @@ export const editCourse = async (req,res) => {
         })
     }
 }
-
 export const getCourseById = async (req,res) => {
     try {
         const {courseId} = req.params;
@@ -164,7 +202,6 @@ export const createLecture = async (req,res) => {
         })
     }
 }
-
 export const getCourseLecture = async (req,res) => {
     try {
         const {courseId} = req.params;
@@ -185,7 +222,6 @@ export const getCourseLecture = async (req,res) => {
         })
     }
 }
-
 export const editLecture = async (req,res) => {
     try {
         const {lectureTitle, videoInfo, isPreviewFree} = req.body;
@@ -197,6 +233,8 @@ export const editLecture = async (req,res) => {
                 message:"Lecture not found!"
             })
         }
+
+        // update lecture
         if(lectureTitle) lecture.lectureTitle = lectureTitle;
         if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
         if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
@@ -204,6 +242,7 @@ export const editLecture = async (req,res) => {
 
         await lecture.save();
 
+        // Ensure the course still has the lecture id if it was not aleardy added;
         const course = await Course.findById(courseId);
         if(course && !course.lectures.includes(lecture._id)){
             course.lectures.push(lecture._id);
@@ -220,7 +259,6 @@ export const editLecture = async (req,res) => {
         })
     }
 }
-
 export const removeLecture = async (req,res) => {
     try {
         const {lectureId} = req.params;
@@ -230,12 +268,15 @@ export const removeLecture = async (req,res) => {
                 message:"Lecture not found!"
             });
         }
+        // delete the lecture from couldinary as well
         if(lecture.publicId){
             await deleteVideoFromCloudinary(lecture.publicId);
         }
+
+        // Remove the lecture reference from the associated course
         await Course.updateOne(
-            {lectures:lectureId},
-            {$pull:{lectures:lectureId}}
+            {lectures:lectureId}, // find the course that contains the lecture
+            {$pull:{lectures:lectureId}} // Remove the lectures id from the lectures array
         );
 
         return res.status(200).json({
@@ -248,7 +289,6 @@ export const removeLecture = async (req,res) => {
         })
     }
 }
-
 export const getLectureById = async (req,res) => {
     try {
         const {lectureId} = req.params;
@@ -268,6 +308,10 @@ export const getLectureById = async (req,res) => {
         })
     }
 }
+
+
+// publich unpublish course logic
+
 export const togglePublishCourse = async (req,res) => {
     try {
         const {courseId} = req.params;
