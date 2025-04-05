@@ -19,6 +19,8 @@ import EditLecture from './pages/admin/lecture/EditLecture'
 import CourseDetail from './pages/student/CourseDetail'
 import CourseProgress from './pages/student/CourseProgress'
 import SearchPage from './pages/student/SearchPage'
+import { AdminRoute, AuthenticatedUser, ProtectedRoute } from './components/ProtectedRoutes'
+import PurchaseCourseProtectedRoute from './components/PurchaseCourseProtectedRoute'
 
 function App() {
 
@@ -37,32 +39,62 @@ function App() {
           )
         },
         {
-          path:"login",
-          element:<Login/>
+          path: "login",
+          element: (
+            <AuthenticatedUser>
+              <Login />
+            </AuthenticatedUser>
+          ),
+        },  
+        {
+          path: "my-learning",
+          element: (
+            <ProtectedRoute>
+              <MyLearning />
+            </ProtectedRoute>
+          ),
         },
         {
-          path:"my-learning",
-          element:<MyLearning/>
+          path: "profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
         {
-          path:"profile",
-          element:<Profile/>
+          path: "course/search",
+          element: (
+            <ProtectedRoute>
+              <SearchPage />
+            </ProtectedRoute>
+          ),
         },
         {
-          path:"course/search",
-          element:<SearchPage/>
+          path: "course-detail/:courseId",
+          element: (
+            <ProtectedRoute>
+              <CourseDetail />
+            </ProtectedRoute>
+          ),
         },
         {
-          path:"course-detail/:courseId",
-          element:<CourseDetail/>
+          path: "course-progress/:courseId",
+          element: (
+            <ProtectedRoute>
+              <PurchaseCourseProtectedRoute>
+              <CourseProgress />
+              </PurchaseCourseProtectedRoute>
+            </ProtectedRoute>
+          ),
         },
         {
-          path:"course-progress/:courseId",
-          element:<CourseProgress/>
-        },
-        {
-          path:"admin",
-          element:<Sidebar/>,
+          path: "admin",
+          element: (
+            <AdminRoute>
+              <Sidebar />
+            </AdminRoute>
+          ),
           children:[
             {
               path:"dashboard",
