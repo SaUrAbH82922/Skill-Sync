@@ -124,33 +124,86 @@ const Navbar = () => {
 export default Navbar
 
 const MobileNavbar = () => {
-  const role = "instructor"
-  const navigate=useNavigate();
+  const { user } = useSelector((store) => store.auth);
+  const role = user?.role;
+  const navigate = useNavigate();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutUser] = useLogoutUserMutation();
+
+  const logoutHandler = async () => {
+    await logoutUser();
+    setMenuOpen(false);
+    navigate("/");
+  };
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button size="icon" className="rounded-full hover:bg-gray-200" variant="outline">
-          <Menu />
-        </Button>
-      </SheetTrigger>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="flex flex-row items-center justify-between mt-6">
-          <SheetTitle>Study_Sync</SheetTitle>
-          <DarkMode />
-        </SheetHeader>
-        <div className="border-t mt-2 pt-4 space-y-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <button>Log out</button>
+    <div className="relative">
+      {/* Hamburger Button */}
+      <button
+        onClick={() => setMenuOpen(true)}
+        className="p-2 rounded-full border dark:border-gray-700 border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <Menu />
+      </button>
+
+      {/* Sidebar Menu */}
+      {menuOpen && (
+        <div className="fixed top-0 right-0 w-3/4 h-full bg-white dark:bg-[#020817] shadow-lg z-50 flex flex-col p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-extrabold">Study_Sync</h2>
+            <DarkMode />
+          </div>
+
+          {/* Links */}
+          <nav className="flex flex-col gap-4 text-sm">
+            <Link
+              to="/my-learning"
+              onClick={() => setMenuOpen(false)}
+              className="hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded"
+            >
+              My Learning
+            </Link>
+            <Link
+              to="/profile"
+              onClick={() => setMenuOpen(false)}
+              className="hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded"
+            >
+              Edit Profile
+            </Link>
+            <button
+              onClick={logoutHandler}
+              className="text-left hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded"
+            >
+              Log Out
+            </button>
+          </nav>
+
+          {/* Divider */}
+          <div className="my-4 border-t dark:border-gray-700" />
+
+          {/* Dashboard for instructors */}
+          {role === "instructor" && (
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                navigate("/admin/dashboard");
+              }}
+              className="mt-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Dashboard
+            </button>
+          )}
+
+          {/* Close Button */}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="absolute top-4 left-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+          >
+            Close
+          </button>
         </div>
-        {role === "instructor" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" onClick={()=>navigate("/admin/dashboard")}>Dashboard</Button>
-            </SheetClose>
-          </SheetFooter>
-        )}
-      </SheetContent>
-    </Sheet>
-  )
-}
+      )}
+    </div>
+  );
+};

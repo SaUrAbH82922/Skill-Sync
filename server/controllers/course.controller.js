@@ -29,47 +29,67 @@ export const createCourse = async (req,res) => {
         })
     }
 }
+const normalize = (str) => str.replace(/\s+/g, "").toLowerCase();
 
-export const searchCourse = async (req,res) => {
-    try {
-        const {query = "", categories = [], sortByPrice =""} = req.query;
-        console.log(categories);
-        
-        // create search query
-        const searchCriteria = {
-            isPublished:true,
-            $or:[
-                {courseTitle: {$regex:query, $options:"i"}},
-                {subTitle: {$regex:query, $options:"i"}},
-                {category: {$regex:query, $options:"i"}},
-            ]
-        }
+export const searchCourse = async (req, res) => {
+  try {
+    const { query = "", categories = [], sortByPrice = "" } = req.query;
 
-        // if categories selected
-        if(categories.length > 0) {
-            searchCriteria.category = {$in: categories};
-        }
+    const searchCriteria = {
+      isPublished: true,
+      $and: [],
+    };
 
-        // define sorting order
-        const sortOptions = {};
-        if(sortByPrice === "low"){
-            sortOptions.coursePrice = 1;//sort by price in ascending
-        }else if(sortByPrice === "high"){
-            sortOptions.coursePrice = -1; // descending
-        }
-
-        let courses = await Course.find(searchCriteria).populate({path:"creator", select:"name photoUrl"}).sort(sortOptions);
-
-        return res.status(200).json({
-            success:true,
-            courses: courses || []
-        });
-
-    } catch (error) {
-        console.log(error);
-        
+    // Add query keyword search
+    if (query) {
+      searchCriteria.$and.push({
+        $or: [
+          { courseTitle: { $regex: query, $options: "i" } },
+          { subTitle: { $regex: query, $options: "i" } },
+          { category: { $regex: query, $options: "i" } },
+        ],
+      });
     }
-}
+
+    // Multi-category match using $or (ANY match) and normalization
+    if (categories.length > 0) {
+      const categoryList = Array.isArray(categories) ? categories : [categories];
+      const normalizedList = categoryList.map(normalize);
+
+      // Match if category matches any normalized category
+      searchCriteria.$and.push({
+        $or: normalizedList.map((cat) => ({
+          $expr: {
+            $eq: [
+              { $toLower: { $replaceAll: { input: "$category", find: " ", replacement: "" } } },
+              cat,
+            ],
+          },
+        })),
+      });
+    }
+
+    if (searchCriteria.$and.length === 0) delete searchCriteria.$and;
+
+    // Sorting
+    const sortOptions = {};
+    if (sortByPrice === "low") sortOptions.coursePrice = 1;
+    else if (sortByPrice === "high") sortOptions.coursePrice = -1;
+
+    const courses = await Course.find(searchCriteria)
+      .populate({ path: "creator", select: "name photoUrl" })
+      .sort(sortOptions);
+
+    return res.status(200).json({
+      success: true,
+      courses: courses || [],
+    });
+
+  } catch (error) {
+    console.error("Error in searchCourse:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
 export const getPublishedCourse = async (_,res) => {
     try {
