@@ -3,9 +3,11 @@
 Skill-Sync is a feature-rich, full-stack learning platform designed to provide a seamless experience for both students and admins. It allows course creation, enrollment, progress tracking, and content management — all within a clean, modern UI. The platform supports real-time progress tracking, dynamic lecture access control, mock payments, and much more.
 
 🔧 Features
+
 👨‍💼 Admin Pane
--
+
 -Create, update, and delete courses
+
 -Add lectures to courses and manage them (CRUD)
 -Set lectures as free-to-watch or enrolled-only
 -Manage course visibility: Published or Draft
