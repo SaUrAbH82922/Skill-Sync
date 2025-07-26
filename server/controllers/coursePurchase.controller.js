@@ -39,8 +39,8 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`, // once payment successful redirect to course progress page
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
+      success_url: `http://localhost:8080/course-progress/${courseId}`, // once payment successful redirect to course progress page
+      cancel_url: `http://localhost:8080/course-detail/${courseId}`,
       metadata: {
         courseId: courseId,
         userId: userId,
@@ -89,7 +89,7 @@ export const stripeWebhook = async (req, res) => {
 
   // Handle the checkout session completed event
   if (event.type === "checkout.session.completed") {
-    console.log("check session complete is called");
+    // console.log("check session complete is called");
 
     try {
       const session = event.data.object;

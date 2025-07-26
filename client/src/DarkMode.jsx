@@ -7,7 +7,7 @@ const DarkMode = () => {
   const dropdownRef = useRef(null);
 
   const handleSelect = (mode) => {
-    console.log("Selected:", mode); // Replace this with your logic
+    // console.log("Selected:", mode); // Replace this with your logic
     setOpen(false);
   };
 
