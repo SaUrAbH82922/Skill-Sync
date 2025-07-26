@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     
-    origin:"http://localhost:5173",
+    origin:"https://skill-sync-1-f5p6.onrender.com",
     credentials:true
 }))
 
