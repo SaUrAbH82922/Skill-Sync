@@ -1,7 +1,7 @@
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-import Navbar from './components/navbar'
+import Navbar from './components/Navbar'
 import { Button } from './components/ui/button'
 import Login from './pages/Login'
 import HeroSection from './pages/student/HeroSection'
